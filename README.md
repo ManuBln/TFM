@@ -56,6 +56,7 @@ source venv/bin/activate
 En Windows:  
 python -m venv venv  
 source venv/bin/activate
+
 deactivate
 3️⃣ Instalar dependencias  
 pip install -r requirements.txt  
