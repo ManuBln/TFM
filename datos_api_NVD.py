@@ -45,17 +45,18 @@ while True:
             cve = item["cve"]
             cve_id = cve.get("id")
 
-            # Verificar si ya existe en la base
             if coleccion.find_one({"cve_id": cve_id}):
                 print(f"[-] {cve_id} ya existe. Saltando.")
                 continue
 
-            descripcion = cve["descriptions"][0]["value"] if cve.get("descriptions") else ""
+            descripcion = ""
+            for desc in cve.get("descriptions", []):
+                if desc.get("lang") == "en":
+                    descripcion = desc.get("value", "")
+                    break
 
-            # Documento simplificado sin productos ni métricas
             doc = {
                 "cve_id": cve_id,
-                "titulo": descripcion,
                 "descripcion": descripcion,
                 "fecha_publicacion": cve.get("published"),
                 "fecha_modificacion": cve.get("lastModified"),
@@ -64,7 +65,6 @@ while True:
                 "fuente": "NVD"
             }
 
-            # Insertar en MongoDB
             coleccion.insert_one(doc)
             total_insertados += 1
             print(f"[+] Insertado {cve_id}")

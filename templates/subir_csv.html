@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Subir CSV{% endblock %}
+{% block content %}
+
+<h2>Subir archivo CSV</h2>
+<form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="archivo" class="form-label">Selecciona un archivo CSV:</label>
+        <input class="form-control" type="file" name="archivo" id="archivo" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Subir y procesar</button>
+</form>
+
+{% endblock %}

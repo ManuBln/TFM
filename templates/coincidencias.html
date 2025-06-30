@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Coincidencias NVD & CSV{% endblock %}
+{% block content %}
+
+<h2 class="mb-4 text-center">🧩 Registros Coincidentes entre CSV y NVD</h2>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-sm">
+    <thead class="table-dark">
+      <tr>
+        <th>CVE ID</th>
+        <th>CSV: Activo</th>
+        <th>CSV: Severidad</th>
+        <th>NVD: Descripción</th>
+        <th>Fecha Match</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in coincidencias %}
+      <tr>
+        <td>{{ item.cve_id }}</td>
+        <td>{{ item.datos_csv['Asset Name'] }}</td>
+        <td>{{ item.datos_csv['Severity'] }}</td>
+        <td>{{ item.datos_nvd.descripcion }}</td>
+        <td>{{ item.fecha_match }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="text-center mt-3">
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">🔙 Volver al inicio</a>
+</div>
+
+{% endblock %}

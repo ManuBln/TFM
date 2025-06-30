@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+  <h2 class="mb-4 text-center">📊 Dashboard de Coincidencias NVD + CSV</h2>
+
+  <!-- Alerta visual de severidades altas -->
+  <div class="alert alert-danger text-center fs-5" role="alert">
+    🔍 Coincidencias Críticas y Altas:
+    <strong>{{ severidades.get('critical', 0) + severidades.get('high', 0) }}</strong>
+    de <strong>{{ total }}</strong> vulnerabilidades detectadas
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">Top 5 Activos con más Vulnerabilidades</h5>
+      <canvas id="graficoActivos"></canvas>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5 class="text-center">¿Vulnerabilidad Parcheable?</h5>
+      <canvas id="graficoParcheable"></canvas>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">🔙 Volver al inicio</a>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const datosActivos = {
+    labels: {{ activos.keys() | list | tojson }},
+    datasets: [{
+      label: 'Cantidad',
+      data: {{ activos.values() | list | tojson }},
+      backgroundColor: ['#0d6efd', '#6610f2', '#20c997', '#fd7e14', '#6f42c1']
+    }]
+  };
+  new Chart(document.getElementById('graficoActivos'), {
+    type: 'bar',
+    data: datosActivos,
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        title: { display: false }
+      }
+    }
+  });
+
+  const datosParcheable = {
+    labels: {{ parcheables.keys() | list | tojson }},
+    datasets: [{
+      data: {{ parcheables.values() | list | tojson }},
+      backgroundColor: ['#198754', '#dc3545', '#6c757d']
+    }]
+  };
+  new Chart(document.getElementById('graficoParcheable'), {
+    type: 'doughnut',
+    data: datosParcheable,
+    options: {
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+</script>
+{% endblock %}
