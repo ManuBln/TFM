@@ -16,6 +16,19 @@ Este proyecto permite visualizar, almacenar y analizar vulnerabilidades CVE extr
 ## 📦 Instalación paso a paso
 
 Sigue estos pasos para instalar y ejecutar el proyecto correctamente:
+## 🗃️ Instalación de MongoDB
+Para que esta aplicación funcione, necesitas tener el servidor de base de datos MongoDB ejecutándose en tu máquina o accesible remotamente.
+
+🔹 Si estás en Ubuntu o Debian:
+
+```bash
+sudo apt update
+sudo apt install -y mongodb
+sudo systemctl start mongodb
+sudo systemctl enable mongodb
+
+🔹 Verifica que esté funcionando:
+sudo systemctl status mongodb
 
 ```bash
 # 1️⃣ Clonar el repositorio
