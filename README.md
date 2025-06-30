@@ -48,6 +48,8 @@ cd tu-repo
 
 2️⃣ Crear y activar un entorno virtual  
 En Linux/macOS:  
+sudo apt install python3.12-venv
+
 python3 -m venv venv  
 source venv/bin/activate  
 
