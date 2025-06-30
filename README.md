@@ -14,12 +14,19 @@ Sigue estos pasos para instalar y ejecutar el proyecto correctamente:
 🗃️ Instalación de MongoDB  
 Para que esta aplicación funcione, necesitas tener el servidor de base de datos MongoDB ejecutándose en tu máquina o accesible remotamente.
 
-🔹 Si estás en Ubuntu o Debian:
+sudo rm /etc/apt/sources.list.d/mongodb-org-7.0.list
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt update
+sudo apt install -y mongodb-org
+mongod --version
+sudo systemctl start mongod
+sudo systemctl enable mongod
+sudo systemctl status mongod
 
-sudo apt update  
-sudo apt install -y mongodb  
-sudo systemctl start mongodb  
-sudo systemctl enable mongodb  
+3. Verifica que MongoDB funcione (cliente)
+mongosh
+o
+mongo
 
 🔹 Verifica que esté funcionando:
 
