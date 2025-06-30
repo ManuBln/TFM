@@ -2,72 +2,99 @@
 
 Este proyecto permite visualizar, almacenar y analizar vulnerabilidades CVE extraídas de la base de datos oficial de NVD, y compararlas con resultados de escáneres en formato CSV (como Qualys). La aplicación incluye una interfaz web desarrollada con Flask, MongoDB, Pandas y Chart.js para visualización de datos, coincidencias y un dashboard profesional.
 
----
+✅ Requisitos del sistema  
+Python 3.10 o superior  
+pip  
+MongoDB local (puedes usar MongoDB Atlas si prefieres)  
+Git (para clonar el repositorio)
 
-## ✅ Requisitos del sistema
-
-- Python 3.10 o superior
-- pip
-- MongoDB local (puedes usar MongoDB Atlas si prefieres)
-- Git (para clonar el repositorio)
-
----
-
-## 📦 Instalación paso a paso
-
+📦 Instalación paso a paso  
 Sigue estos pasos para instalar y ejecutar el proyecto correctamente:
-## 🗃️ Instalación de MongoDB
+
+🗃️ Instalación de MongoDB  
 Para que esta aplicación funcione, necesitas tener el servidor de base de datos MongoDB ejecutándose en tu máquina o accesible remotamente.
 
 🔹 Si estás en Ubuntu o Debian:
 
-```bash
-sudo apt update
-sudo apt install -y mongodb
-sudo systemctl start mongodb
-sudo systemctl enable mongodb
+sudo apt update  
+sudo apt install -y mongodb  
+sudo systemctl start mongodb  
+sudo systemctl enable mongodb  
 
 🔹 Verifica que esté funcionando:
-sudo systemctl status mongodb
 
-```bash
-# 1️⃣ Clonar el repositorio
-git clone https://github.com/tu-usuario/tu-repo.git
-cd tu-repo
+sudo systemctl status mongodb  
 
-# 2️⃣ Crear y activar un entorno virtual
-# En Linux/macOS:
-python3 -m venv venv
-source venv/bin/activate
+🔹 También puedes probar la conexión con:
 
-# En Windows:
-python -m venv venv
-venv\Scripts\activate
+mongo --eval 'db.runCommand({ connectionStatus: 1 })'  
 
-# 3️⃣ Instalar las dependencias
-pip install -r requirements.txt
+Por defecto, la aplicación se conecta a:  
+MongoClient("mongodb://localhost:27017/")  
+Si usas MongoDB Atlas, edita la URI en app.py.
 
-# 4️⃣ Verificar que MongoDB esté corriendo (por defecto en localhost:27017)
-# Si usas MongoDB Atlas, edita la URI en app.py
+🔧 Configuración del entorno
 
-Antes de usar la web, ejecuta el siguiente script para descargar los últimos CVEs desde la API oficial de NVD:
-python datos_api_NVD.py
-🚀 Ejecutar la aplicación
-python app.py
+1️⃣ Clonar el repositorio:  
+git clone https://github.com/tu-usuario/tu-repo.git  
+cd tu-repo  
 
-Después abre tu navegador en:
+2️⃣ Crear y activar un entorno virtual  
+En Linux/macOS:  
+python3 -m venv venv  
+source venv/bin/activate  
 
-http://127.0.0.1:5000
+En Windows:  
+python -m venv venv  
+venv\Scripts\activate  
 
-🧪 Funcionalidades principales
-/ → Vista principal: listado de CVEs con buscador y paginación
+3️⃣ Instalar dependencias  
+pip install -r requirements.txt  
 
-/subir_csv → Subida de archivos CSV desde navegador
+4️⃣ Crear carpeta de subida (si no existe):  
+mkdir uploads  
 
-/coincidencias → Visualización de coincidencias entre NVD y CSV
+📄 Si no tienes el archivo requirements.txt, puedes generarlo con:  
+pip freeze > requirements.txt  
 
-/dashboard → Dashboard visual con gráficas interactivas
+Ejemplo mínimo de contenido de requirements.txt:  
+Flask  
+pymongo  
+pandas  
+Werkzeug  
 
-/api/cves → API JSON de todos los CVEs almacenados
+📥 Cargar CVEs desde la API de NVD  
+Antes de usar la web, ejecuta el siguiente script para descargar los últimos CVEs desde la API oficial de NVD:  
+python datos_api_NVD.py  
 
+🚀 Ejecutar la aplicación  
+python app.py  
 
+Después abre tu navegador en:  
+http://127.0.0.1:5000  
+
+🧪 Funcionalidades principales  
+/               → Vista principal con CVEs, buscador y paginación  
+/subir_csv      → Subida de archivos CSV desde navegador  
+/coincidencias  → Visualización de coincidencias entre CSV y NVD  
+/dashboard      → Dashboard con gráficas interactivas  
+/api/cves       → API JSON con todos los CVEs  
+
+📁 Estructura del proyecto  
+tu-repo/  
+├── app.py  
+├── datos_api_NVD.py  
+├── requirements.txt  
+├── README.md  
+├── uploads/  
+├── templates/  
+│   ├── base.html  
+│   ├── index.html  
+│   ├── subir_csv.html  
+│   ├── coincidencias.html  
+│   └── dashboard.html  
+├── static/  
+└── .gitignore  
+
+¿Listo para analizar tus vulnerabilidades de forma profesional?  
+¡Ejecuta tu servidor y comienza! 🚀
