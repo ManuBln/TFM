@@ -1,5 +1,6 @@
 # 🛡️ Aplicación Web de Análisis de Vulnerabilidades (NVD + CSV)
 Este proyecto permite visualizar, almacenar y analizar vulnerabilidades CVE extraídas de la base de datos oficial de NVD y compararlas con resultados de escáneres en formato CSV (como Qualys). La aplicación incluye una interfaz web desarrollada con Flask, MongoDB, Pandas y Chart.js para la visualización, detección de coincidencias y generación de un dashboard profesional.
+💡 Hecho con: 🐍 Flask + 🍃 MongoDB + 🧠 Pandas + 📊 Chart.js
 
 ✅ Requisitos del sistema  
 - Python 3.10 o superior  
