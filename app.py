@@ -115,11 +115,29 @@ def dashboard():
     activos = Counter()
     parcheables = Counter()
 
+    # Definir variantes de severidades críticas y altas
+    criticos = {"critical", "crítico", "critico", "crítica", "critica"}
+    altos = {"high", "alta", "alto"}
+
+    def normaliza(s):
+        import unicodedata
+        s = str(s or "").strip().lower()
+        s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+        return s
+
+    total_criticos = 0
+    total_altos = 0
+
     for item in coincidencias.find():
         doc_csv = item.get("datos_csv", {})
-
-        severity = str(doc_csv.get("Severity", "unknown")).strip().lower()
+        severity_raw = doc_csv.get("Severity", "unknown")
+        severity = normaliza(severity_raw)
         severidades[severity] += 1
+
+        if severity in criticos:
+            total_criticos += 1
+        elif severity in altos:
+            total_altos += 1
 
         activo = doc_csv.get("Asset Name", "Desconocido")
         activos[activo] += 1
@@ -134,7 +152,9 @@ def dashboard():
         total=total,
         severidades=severidades,
         activos=top_activos,
-        parcheables=parcheables
+        parcheables=parcheables,
+        total_criticos=total_criticos,
+        total_altos=total_altos
     )
 
 if __name__ == "__main__":

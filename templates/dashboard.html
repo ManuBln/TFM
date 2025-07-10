@@ -1,31 +1,45 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard VulnMatch{% endblock %}
 {% block content %}
 
 <div class="container py-4">
-  <h2 class="mb-4 text-center">📊 Dashboard de Coincidencias NVD + CSV</h2>
-
-  <!-- Alerta visual de severidades altas -->
-  <div class="alert alert-danger text-center fs-5" role="alert">
-    🔍 Coincidencias Críticas y Altas:
-    <strong>{{ severidades.get('critical', 0) + severidades.get('high', 0) }}</strong>
-    de <strong>{{ total }}</strong> vulnerabilidades detectadas
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 mb-4">
-      <h5 class="text-center">Top 5 Activos con más Vulnerabilidades</h5>
-      <canvas id="graficoActivos"></canvas>
+  <div class="row justify-content-center mb-4">
+    <div class="col-12 col-xl-10">
+      <div class="card shadow-sm border-0">
+        <div class="card-body px-4 px-md-5">
+          <h2 class="mb-4 text-center">📊 Dashboard VulnMatch</h2>
+          <div class="alert alert-danger text-center fs-5 mb-4" role="alert">
+            🔍 Coincidencias Críticas: <strong style="color: #E74C3C">{{ total_criticos }}</strong>
+            &nbsp;|&nbsp; Altas: <strong style="color: #F1C40F">{{ total_altos }}</strong>
+            <br>
+            de <strong>{{ total }}</strong> vulnerabilidades detectadas
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-6 col-xl-5 mb-4">
+              <div class="card shadow-sm border-0">
+                <div class="card-body px-2 px-md-3">
+                  <h5 class="text-center">Top 5 Activos con más Vulnerabilidades</h5>
+                  <canvas id="graficoActivos"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-5 mb-4">
+              <div class="card shadow-sm border-0">
+                <div class="card-body px-2 px-md-3">
+                  <h5 class="text-center">¿Vulnerabilidad Parcheable?</h5>
+                  <canvas id="graficoParcheable"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+              🡸 Volver al inicio
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="col-md-6 mb-4">
-      <h5 class="text-center">¿Vulnerabilidad Parcheable?</h5>
-      <canvas id="graficoParcheable"></canvas>
-    </div>
-  </div>
-
-  <div class="text-center mt-4">
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">🔙 Volver al inicio</a>
   </div>
 </div>
 
@@ -37,7 +51,7 @@
     datasets: [{
       label: 'Cantidad',
       data: {{ activos.values() | list | tojson }},
-      backgroundColor: ['#0d6efd', '#6610f2', '#20c997', '#fd7e14', '#6f42c1']
+      backgroundColor: ['#00BFFF', '#3498DB', '#2ECC71', '#F1C40F', '#E74C3C']
     }]
   };
   new Chart(document.getElementById('graficoActivos'), {
@@ -56,7 +70,7 @@
     labels: {{ parcheables.keys() | list | tojson }},
     datasets: [{
       data: {{ parcheables.values() | list | tojson }},
-      backgroundColor: ['#198754', '#dc3545', '#6c757d']
+      backgroundColor: ['#2ECC71', '#E74C3C', '#3C3F58']
     }]
   };
   new Chart(document.getElementById('graficoParcheable'), {

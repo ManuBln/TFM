@@ -1,51 +1,64 @@
 {% extends "base.html" %}
-{% block title %}Listado de CVEs{% endblock %}
+{% block title %}VulnMatch{% endblock %}
 {% block content %}
 
-<h2 class="text-center mb-4">Listado de Vulnerabilidades CVE (NVD)</h2>
-
-<!-- Formulario de búsqueda -->
-<form method="GET" action="{{ url_for('index') }}" class="mb-4">
-  <div class="input-group">
-    <input type="text" class="form-control" name="q" placeholder="Buscar por CVE o descripción" value="{{ q or '' }}">
-    <button class="btn btn-primary" type="submit">Buscar</button>
+<div class="row justify-content-center mb-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body">
+        <h2 class="text-center mb-3">VulnMatch - Listado de Vulnerabilidades CVE</h2>
+        <form method="GET" action="{{ url_for('index') }}" class="mb-0">
+          <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Buscar por CVE o descripción" value="{{ q or '' }}">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</form>
-
-<div class="table-responsive">
-  <table class="table table-striped table-hover table-bordered align-middle w-100" style="font-size: 0.9rem;">
-    <thead class="table-dark text-center">
-      <tr>
-        <th>CVE ID</th>
-        <th>Descripción</th>
-        <th>Fecha Publicación</th>
-        <th>Fecha Modificación</th>
-        <th>CWE ID</th>
-        <th>Referencias</th>
-        <th>Fuente</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cve in cves %}
-      <tr>
-        <td class="text-nowrap">{{ cve.cve_id }}</td>
-        <td style="min-width: 300px;">{{ cve.descripcion }}</td>
-        <td class="text-nowrap">{{ cve.fecha_publicacion }}</td>
-        <td class="text-nowrap">{{ cve.fecha_modificacion }}</td>
-        <td>{{ cve.cwe_id }}</td>
-        <td class="link-ref">
-          {% for ref in cve.referencias %}
-            <a href="{{ ref }}" target="_blank">[Link]</a>
-          {% endfor %}
-        </td>
-        <td>{{ cve.fuente }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 </div>
 
-<!-- Paginación simple -->
+<div class="row justify-content-center">
+  <div class="col-lg-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-bordered align-middle w-100 mb-0" style="font-size: 0.97rem;">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>CVE ID</th>
+                <th>Descripción</th>
+                <th>Fecha Publicación</th>
+                <th>Fecha Modificación</th>
+                <th>CWE ID</th>
+                <th>Referencias</th>
+                <th>Fuente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cve in cves %}
+              <tr>
+                <td class="text-nowrap">{{ cve.cve_id }}</td>
+                <td style="min-width: 300px;">{{ cve.descripcion }}</td>
+                <td class="text-nowrap">{{ cve.fecha_publicacion }}</td>
+                <td class="text-nowrap">{{ cve.fecha_modificacion }}</td>
+                <td>{{ cve.cwe_id }}</td>
+                <td class="link-ref">
+                  {% for ref in cve.referencias %}
+                    <a href="{{ ref }}" target="_blank">[Link]</a>
+                  {% endfor %}
+                </td>
+                <td>{{ cve.fuente }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <nav aria-label="Paginación de CVEs">
   <ul class="pagination justify-content-center mt-3">
     {% if page > 1 %}

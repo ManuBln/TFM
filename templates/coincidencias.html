@@ -1,36 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Coincidencias NVD & CSV{% endblock %}
+{% block title %}Coincidencias VulnMatch{% endblock %}
 {% block content %}
 
-<h2 class="mb-4 text-center">🧩 Registros Coincidentes entre CSV y NVD</h2>
-
-<div class="table-responsive">
-  <table class="table table-bordered table-hover table-sm">
-    <thead class="table-dark">
-      <tr>
-        <th>CVE ID</th>
-        <th>CSV: Activo</th>
-        <th>CSV: Severidad</th>
-        <th>NVD: Descripción</th>
-        <th>Fecha Match</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in coincidencias %}
-      <tr>
-        <td>{{ item.cve_id }}</td>
-        <td>{{ item.datos_csv['Asset Name'] }}</td>
-        <td>{{ item.datos_csv['Severity'] }}</td>
-        <td>{{ item.datos_nvd.descripcion }}</td>
-        <td>{{ item.fecha_match }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-<div class="text-center mt-3">
-  <a href="{{ url_for('index') }}" class="btn btn-secondary">🔙 Volver al inicio</a>
+<div class="row justify-content-center mb-4">
+  <div class="col-lg-10">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h2 class="mb-4 text-center">🛩️ Coincidencias VulnMatch (CSV & NVD)</h2>
+        {% if coincidencias|length == 0 %}
+          <div class="alert alert-warning text-center mb-4" role="alert">
+            No se encontraron coincidencias entre el CSV y la base de datos NVD.<br>
+            Sube un nuevo archivo CSV para buscar coincidencias.
+          </div>
+          <div class="text-center mt-4">
+            <a href="{{ url_for('subir_csv') }}" class="btn btn-primary">
+              📤 Subir CSV
+            </a>
+          </div>
+        {% else %}
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-striped table-sm mb-0">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>CVE ID</th>
+                <th>CSV: Activo</th>
+                <th>CSV: Severidad</th>
+                <th>NVD: Descripción</th>
+                <th>Fecha Match</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in coincidencias %}
+              <tr>
+                <td>{{ item.cve_id }}</td>
+                <td>{{ item.datos_csv['Asset Name'] }}</td>
+                <td>{{ item.datos_csv['Severity'] }}</td>
+                <td>{{ item.datos_nvd.descripcion }}</td>
+                <td>{{ item.fecha_match }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center mt-4">
+          <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            🡸 Volver al inicio
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

@@ -1,14 +1,78 @@
 {% extends "base.html" %}
-{% block title %}Subir CSV{% endblock %}
+{% block title %}VulnMatch - Subir CSV{% endblock %}
 {% block content %}
 
-<h2>Subir archivo CSV</h2>
-<form method="POST" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="archivo" class="form-label">Selecciona un archivo CSV:</label>
-        <input class="form-control" type="file" name="archivo" id="archivo" required>
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h2 class="mb-3">Subir archivo CSV</h2>
+        <form method="POST" enctype="multipart/form-data" id="csv-upload-form">
+          <div class="mb-3">
+            <label for="archivo" class="form-label">Selecciona un archivo CSV:</label>
+            <input class="form-control" type="file" name="archivo" id="archivo" required accept=".csv">
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Subir y procesar</button>
+        </form>
+        <div id="spinner-csv" class="text-center mt-4" style="display:none;">
+          <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Procesando...</span>
+          </div>
+          <div class="mt-2" style="color: #4EF78A; font-weight: 600;">Procesando archivo, por favor espere...</div>
+        </div>
+
+        <!-- Modal de error -->
+        <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-danger text-white">
+              <div class="modal-header border-0">
+                <h5 class="modal-title" id="modalErrorLabel">Archivo no válido</h5>
+              </div>
+              <div class="modal-body">
+                Solo se permiten archivos con extensión <b>.csv</b>.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal de éxito -->
+        <div class="modal fade" id="modalOk" tabindex="-1" aria-labelledby="modalOkLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-success text-white">
+              <div class="modal-header border-0">
+                <h5 class="modal-title" id="modalOkLabel">Archivo válido</h5>
+              </div>
+              <div class="modal-body">
+                Archivo CSV seleccionado correctamente.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Subir y procesar</button>
-</form>
+  </div>
+</div>
+
+<script>
+  // Validación de archivo CSV
+  document.getElementById('archivo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const isCsv = file.name.toLowerCase().endsWith('.csv');
+    if (!isCsv) {
+      e.target.value = '';
+      const modal = new bootstrap.Modal(document.getElementById('modalError'));
+      modal.show();
+      setTimeout(() => { modal.hide(); }, 2000);
+    } else {
+      const modalOk = new bootstrap.Modal(document.getElementById('modalOk'));
+      modalOk.show();
+      setTimeout(() => { modalOk.hide(); }, 2000);
+    }
+  });
+  // Spinner al enviar
+  document.getElementById('csv-upload-form').addEventListener('submit', function() {
+    document.getElementById('spinner-csv').style.display = 'block';
+  });
+</script>
 
 {% endblock %}
