@@ -105,7 +105,7 @@ def coincidencias():
     coincidencias = list(coleccion.find({}, {"_id": 0}).limit(100))
     return render_template("coincidencias.html", coincidencias=coincidencias)
 
-# Dashboard
+# Dashboard refinado y profesional
 @app.route("/dashboard")
 def dashboard():
     coincidencias = db["registros_nvd_csv_coincidentes"]
@@ -114,10 +114,13 @@ def dashboard():
     severidades = Counter()
     activos = Counter()
     parcheables = Counter()
+    recientes = []
 
-    # Definir variantes de severidades críticas y altas
+    # Definir variantes de severidades
     criticos = {"critical", "crítico", "critico", "crítica", "critica"}
     altos = {"high", "alta", "alto"}
+    medias = {"medium", "media", "medio"}
+    bajas = {"low", "baja", "bajo"}
 
     def normaliza(s):
         import unicodedata
@@ -125,11 +128,26 @@ def dashboard():
         s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
         return s
 
+    def severidad_key(sev):
+        if sev in criticos:
+            return 4
+        elif sev in altos:
+            return 3
+        elif sev in medias:
+            return 2
+        elif sev in bajas:
+            return 1
+        return 0
+
     total_criticos = 0
     total_altos = 0
+    vulner_list = []
+    now = datetime.utcnow()
+    ultimas_24h = now.timestamp() - 24*3600
 
     for item in coincidencias.find():
         doc_csv = item.get("datos_csv", {})
+        doc_nvd = item.get("datos_nvd", {})
         severity_raw = doc_csv.get("Severity", "unknown")
         severity = normaliza(severity_raw)
         severidades[severity] += 1
@@ -145,7 +163,55 @@ def dashboard():
         parcheable = str(doc_csv.get("Vuln Patchable", "Desconocido")).strip().capitalize()
         parcheables[parcheable] += 1
 
+        cve_id = item.get("cve_id", "")
+        descripcion = doc_nvd.get("descripcion", "")
+        cvss = doc_nvd.get("cvss")
+        fecha_match = item.get("fecha_match")
+        asset = doc_csv.get("Asset Name", "Desconocido")
+
+        vulner_list.append({
+            "cve_id": cve_id,
+            "severity": severity,
+            "descripcion": descripcion,
+            "fecha_match": fecha_match,
+            "asset": asset,
+            "cvss": cvss
+        })
+
+        # Recientes (últimas 24h)
+        if fecha_match:
+            try:
+                fecha_dt = datetime.fromisoformat(fecha_match) if isinstance(fecha_match, str) else fecha_match
+                if fecha_dt.timestamp() > ultimas_24h:
+                    recientes.append({
+                        "cve_id": cve_id,
+                        "severity": severity,
+                        "descripcion": descripcion,
+                        "fecha_match": fecha_dt.strftime("%Y-%m-%d %H:%M"),
+                        "asset": asset,
+                        "cvss": cvss
+                    })
+            except Exception:
+                pass
+
+    # Ordenar top 10 por severidad y CVSS (más crítico primero)
+    vulner_list_sorted = sorted(
+        vulner_list,
+        key=lambda v: (severidad_key(v["severity"]), v["cvss"] if v["cvss"] is not None else -1, v["cve_id"]),
+        reverse=True
+    )
+    top_10_vulner = vulner_list_sorted[:10]
+    recientes = sorted(recientes, key=lambda v: v["fecha_match"], reverse=True)
     top_activos = dict(activos.most_common(5))
+
+    # --- PAGINACIÓN PARA VULNER RECENTES ---
+    page = int(request.args.get("recientes_page", 1))
+    per_page = 4
+    total_recientes = len(recientes)
+    total_pages = (total_recientes + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    recientes_paged = recientes[start:end]
 
     return render_template(
         "dashboard.html",
@@ -154,7 +220,12 @@ def dashboard():
         activos=top_activos,
         parcheables=parcheables,
         total_criticos=total_criticos,
-        total_altos=total_altos
+        total_altos=total_altos,
+        top_10_vulner=top_10_vulner,
+        donut_severidades=dict(severidades),
+        recientes=recientes_paged,
+        recientes_page=page,
+        recientes_total_pages=total_pages
     )
 
 if __name__ == "__main__":

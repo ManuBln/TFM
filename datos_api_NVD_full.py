@@ -38,31 +38,56 @@ while True:
         for item in vulnerabilidades:
             cve = item.get("cve", {})
             cve_id = cve.get("id")
-
             if not cve_id:
                 continue
 
-            if coleccion.find_one({"cve_id": cve_id}):
-                print(f"[-] {cve_id} ya existe. Saltando.")
-                continue
-
-            # Obtener descripción en inglés
+            # Descripción en inglés
             descripcion = ""
             for desc in cve.get("descriptions", []):
                 if desc.get("lang") == "en":
-                    descripcion = desc.get("value", "")
+                    descripcion = desc.get("value", "").strip()
                     break
+
+            # Obtener CVSS v3 o v2 y normalizar a float
+            cvss = None
+            metrics = cve.get("metrics", {})
+            for key in ["cvssMetricV31", "cvssMetricV30", "cvssMetricV2"]:
+                if key in metrics:
+                    try:
+                        cvss = float(metrics[key][0]["cvssData"]["baseScore"])
+                    except Exception:
+                        cvss = None
+                    break
+
+            # CWE
+            cwe_id = ""
+            weaknesses = cve.get("weaknesses", [])
+            if weaknesses and "description" in weaknesses[0]:
+                cwe_id = weaknesses[0]["description"][0].get("value", "")
+
+            # Referencias
+            referencias = [ref["url"] for ref in cve.get("references", []) if "url" in ref]
 
             doc = {
                 "cve_id": cve_id,
                 "descripcion": descripcion,
                 "fecha_publicacion": cve.get("published"),
                 "fecha_modificacion": cve.get("lastModified"),
-                "cwe_id": cve.get("weaknesses", [{}])[0].get("description", [{}])[0].get("value", ""),
-                "referencias": [ref["url"] for ref in cve.get("references", [])],
+                "cwe_id": cwe_id,
+                "referencias": referencias,
                 "fuente": "NVD",
-                "fecha_insercion": datetime.utcnow()
+                "fecha_insercion": datetime.utcnow(),
+                "cvss": cvss
             }
+
+            existente = coleccion.find_one({"cve_id": cve_id})
+            if existente:
+                if existente.get("fecha_modificacion") != doc["fecha_modificacion"]:
+                    coleccion.update_one({"cve_id": cve_id}, {"$set": doc})
+                    print(f"[~] {cve_id} actualizado.")
+                else:
+                    print(f"[-] {cve_id} sin cambios.")
+                continue
 
             coleccion.insert_one(doc)
             total_insertados += 1

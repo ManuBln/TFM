@@ -19,14 +19,15 @@
           </div>
         {% else %}
         <div class="table-responsive">
-          <table class="table table-bordered table-hover table-striped table-sm mb-0">
+          <table class="table table-bordered table-hover table-striped table-sm mb-0 text-center" style="table-layout:fixed; font-size:1rem;">
             <thead class="table-dark text-center">
               <tr>
-                <th>CVE ID</th>
-                <th>CSV: Activo</th>
-                <th>CSV: Severidad</th>
-                <th>NVD: Descripción</th>
-                <th>Fecha Match</th>
+                <th style="min-width:90px; max-width:120px;">CVE ID</th>
+                <th style="min-width:120px; max-width:180px;">CSV: Activo</th>
+                <th style="min-width:90px; max-width:120px;">CSV: Severidad</th>
+                <th style="min-width:70px; max-width:90px;">CVSS</th>
+                <th style="min-width:180px; max-width:320px;">NVD: Descripción</th>
+                <th style="min-width:120px; max-width:180px;">Fecha Match</th>
               </tr>
             </thead>
             <tbody>
@@ -34,8 +35,30 @@
               <tr>
                 <td>{{ item.cve_id }}</td>
                 <td>{{ item.datos_csv['Asset Name'] }}</td>
-                <td>{{ item.datos_csv['Severity'] }}</td>
-                <td>{{ item.datos_nvd.descripcion }}</td>
+                <td>
+                  <span class="badge 
+                    {% set sev = item.datos_csv['Severity']|lower %}
+                    {% if 'crit' in sev %}badge-sev-critical
+                    {% elif 'high' in sev or 'alta' in sev %}badge-sev-high
+                    {% elif 'med' in sev or 'media' in sev %}badge-sev-medium
+                    {% elif 'low' in sev or 'baja' in sev %}badge-sev-low
+                    {% else %}badge-sev-unknown{% endif %}">
+                    {{ item.datos_csv['Severity'] }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  {% if item.datos_nvd.cvss is not none %}
+                    <span class="badge 
+                      {% if item.datos_nvd.cvss >= 9 %}badge-cvss-crit
+                      {% elif item.datos_nvd.cvss >= 7 %}badge-cvss-high
+                      {% elif item.datos_nvd.cvss >= 4 %}badge-cvss-med
+                      {% elif item.datos_nvd.cvss > 0 %}badge-cvss-low
+                      {% else %}badge-cvss-none{% endif %}">
+                      {{ item.datos_nvd.cvss }}
+                    </span>
+                  {% else %}-{% endif %}
+                </td>
+                <td title="{{ item.datos_nvd.descripcion }}">{{ item.datos_nvd.descripcion|truncate(100) }}</td>
                 <td>{{ item.fecha_match }}</td>
               </tr>
               {% endfor %}

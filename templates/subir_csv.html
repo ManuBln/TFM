@@ -6,21 +6,20 @@
   <div class="col-md-8 col-lg-6">
     <div class="card shadow-sm border-0">
       <div class="card-body">
-        <h2 class="mb-3">Subir archivo CSV</h2>
+        <h2 class="mb-3 text-center" style="font-family:'Fira Mono',monospace; color:#4EF78A;">Subir archivo CSV</h2>
         <form method="POST" enctype="multipart/form-data" id="csv-upload-form">
           <div class="mb-3">
             <label for="archivo" class="form-label">Selecciona un archivo CSV:</label>
             <input class="form-control" type="file" name="archivo" id="archivo" required accept=".csv">
           </div>
-          <button type="submit" class="btn btn-primary w-100">Subir y procesar</button>
+          <button type="submit" class="btn btn-primary w-100 py-2 fs-5">Subir y procesar</button>
         </form>
         <div id="spinner-csv" class="text-center mt-4" style="display:none;">
-          <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+          <div class="spinner-border text-success" role="status" style="width: 4rem; height: 4rem;">
             <span class="visually-hidden">Procesando...</span>
           </div>
-          <div class="mt-2" style="color: #4EF78A; font-weight: 600;">Procesando archivo, por favor espere...</div>
+          <div class="mt-2" style="color: #4EF78A; font-weight: 700; font-size:1.1rem;">Procesando archivo, por favor espere...</div>
         </div>
-
         <!-- Modal de error -->
         <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
@@ -30,19 +29,6 @@
               </div>
               <div class="modal-body">
                 Solo se permiten archivos con extensión <b>.csv</b>.
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Modal de éxito -->
-        <div class="modal fade" id="modalOk" tabindex="-1" aria-labelledby="modalOkLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-success text-white">
-              <div class="modal-header border-0">
-                <h5 class="modal-title" id="modalOkLabel">Archivo válido</h5>
-              </div>
-              <div class="modal-body">
-                Archivo CSV seleccionado correctamente.
               </div>
             </div>
           </div>
@@ -63,10 +49,6 @@
       const modal = new bootstrap.Modal(document.getElementById('modalError'));
       modal.show();
       setTimeout(() => { modal.hide(); }, 2000);
-    } else {
-      const modalOk = new bootstrap.Modal(document.getElementById('modalOk'));
-      modalOk.show();
-      setTimeout(() => { modalOk.hide(); }, 2000);
     }
   });
   // Spinner al enviar

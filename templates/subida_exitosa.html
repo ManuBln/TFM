@@ -6,19 +6,19 @@
   <div class="col-md-8 col-lg-6">
     <div class="card shadow-sm border-0">
       <div class="card-body text-center">
-        <h2 class="mb-3">Resultado del procesamiento</h2>
-        <div class="alert alert-success mb-4" role="alert">
+        <h2 class="mb-3" style="font-family:'Fira Mono',monospace; color:#4EF78A;">Resultado del procesamiento</h2>
+        <div class="alert alert-success mb-4" role="alert" style="font-size:1.1rem;">
           {{ mensaje }}
         </div>
         <div class="row g-2 justify-content-center">
           <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-grid">
             <a href="{{ url_for('index') }}" class="btn btn-secondary mb-2">
-              🡸 Ver CVEs NVD
+              🏠 Ver CVEs NVD
             </a>
           </div>
           <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-grid">
             <a href="{{ url_for('coincidencias') }}" class="btn btn-info mb-2">
-              🛩️ Ver coincidencias
+              🧩 Ver coincidencias
             </a>
           </div>
           <div class="col-12 col-sm-6 col-md-6 col-lg-6 d-grid">

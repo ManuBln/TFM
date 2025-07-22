@@ -2,8 +2,9 @@
 
 body {
   background: #14141F;
-  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-family: 'Segoe UI', 'Roboto', Arial, monospace, sans-serif;
   color: #ECECEC;
+  min-width: 0;
 }
 
 :root {
@@ -20,6 +21,7 @@ body {
   font-size: 1.5rem;
   color: var(--vulnmatch-green) !important;
   text-shadow: 0 2px 8px #4ef78a33;
+  font-family: 'Fira Mono', 'Consolas', 'Segoe UI', monospace, Arial, sans-serif;
 }
 .nav-link {
   font-size: 1.08rem;
@@ -35,6 +37,7 @@ h2, h5 {
   color: var(--vulnmatch-green);
   font-weight: 700;
   letter-spacing: 0.5px;
+  font-family: 'Fira Mono', 'Consolas', 'Segoe UI', monospace, Arial, sans-serif;
 }
 
 .card, .card-body, .alert, form {
@@ -54,6 +57,7 @@ h2, h5 {
   margin-bottom: 2rem;
   border-collapse: separate !important;
   border-spacing: 0;
+  min-width: 100%;
 }
 .table thead {
   background: #23243a;
@@ -83,6 +87,7 @@ h2, h5 {
 }
 .table th, .table td {
   border-radius: 0 !important;
+  word-break: break-word;
 }
 
 .btn-primary {
@@ -179,6 +184,8 @@ canvas {
   border-radius: 1rem;
   box-shadow: 0 2px 12px #0003;
   padding: 1rem;
+  width: 100% !important;
+  max-width: 100%;
 }
 
 /* Dashboard chart text improvements */
@@ -203,6 +210,94 @@ form {
   border-radius: 1rem;
   box-shadow: 0 2px 12px #0002;
   margin-bottom: 2rem;
+}
+
+/* Badges de severidad y CVSS */
+.badge-sev-critical { background: #E74C3C; color: #fff; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-sev-high { background: #F39C12; color: #fff; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-sev-medium { background: #F1C40F; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-sev-low { background: #2ECC71; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-sev-unknown { background: #95A5A6; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+
+.badge-cvss-crit { background: #E74C3C; color: #fff; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-cvss-high { background: #F39C12; color: #fff; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-cvss-med { background: #F1C40F; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-cvss-low { background: #2ECC71; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+.badge-cvss-none { background: #95A5A6; color: #181824; font-weight: 700; letter-spacing: 0.5px; font-family: 'Fira Mono', monospace; }
+
+/* Tooltips */
+[data-bs-toggle="tooltip"] {
+  cursor: help;
+  text-decoration: underline dotted;
+  font-family: 'Fira Mono', monospace;
+  font-size: 1em;
+}
+
+/* Compactar tablas en móvil */
+@media (max-width: 992px) {
+  .row.g-4 > .col-lg-4, .row.g-4 > .col-lg-8, .row.g-4 > .col-xl-3, .row.g-4 > .col-xl-9 {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100%;
+  }
+  .table th, .table td {
+    font-size: 0.90rem;
+    padding: 0.3rem 0.4rem;
+  }
+  .table .text-nowrap, .table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .table td[title] {
+    cursor: pointer;
+  }
+  .card, .card-body {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+}
+
+/* Botón volver arriba */
+#btn-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  display: none;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 16px #0005;
+  cursor: pointer;
+  padding: 0;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+#btn-top:hover {
+  box-shadow: 0 6px 24px #0007;
+  transform: scale(1.08);
+}
+@media (max-width: 600px) {
+  #btn-top {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    bottom: 16px;
+    right: 16px;
+  }
+}
+footer {
+  background: none;
+  border-top: 1px solid #23243a;
+  margin-top: 2rem;
+  padding-top: 0.7rem;
+  color: #95A5A6;
+  font-size: 0.98rem;
+  letter-spacing: 0.5px;
 }
 
 @media (max-width: 768px) {
