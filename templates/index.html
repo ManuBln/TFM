@@ -28,7 +28,7 @@
               <tr>
                 <th style="min-width:90px; max-width:120px;">CVE ID</th>
                 <th style="min-width:180px; max-width:320px;">Descripción</th>
-                <th style="min-width:70px; max-width:90px;">CVSS</th>
+                <th style="min-width:70px; max-width:90px;" data-bs-toggle="tooltip" title="Puntuación CVSS (0-10)">CVSS</th>
                 <th style="min-width:120px; max-width:180px;">Fecha Publicación</th>
                 <th style="min-width:120px; max-width:180px;">Fecha Modificación</th>
                 <th style="min-width:80px; max-width:120px;">CWE ID</th>
@@ -48,8 +48,9 @@
                       {% elif cve.cvss >= 7 %}badge-cvss-high
                       {% elif cve.cvss >= 4 %}badge-cvss-med
                       {% elif cve.cvss > 0 %}badge-cvss-low
-                      {% else %}badge-cvss-none{% endif %}">
-                      {{ cve.cvss }}
+                      {% else %}badge-cvss-none{% endif %}"
+                      data-bs-toggle="tooltip" title="Puntuación CVSS (0-10)">
+                      {{ cve.cvss|round(1) }}
                     </span>
                   {% else %}-{% endif %}
                 </td>
