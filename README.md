@@ -119,7 +119,7 @@ http://127.0.0.1:5000
 TFM/
 ├── app.py
 ├── datos_api_NVD.py
-├── datos_api_NVD_mejorado.py
+├── datos_api_NVD_30d.py
 ├── datos_api_NVD_full.py
 ├── requirements.txt
 ├── README.md
